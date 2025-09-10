@@ -1,0 +1,75 @@
+🤖 AI Model Strategy for CivicLens
+1. Translation
+✅ Use Pretrained API/Wrapper (e.g., OpenAI GPT, Google Translate, or HuggingFace MarianMT).
+
+
+❌ Don’t train your own — translation needs huge corpora + compute.
+
+
+Hackathon Tip: You can “wow” judges by showing Spanish/Chinese → English translation via API, then inclusive rewriting.
+
+
+
+2. Sentiment Analysis
+✅ Use Pretrained Model (e.g., HuggingFace distilbert-base-uncased-finetuned-sst-2).
+
+
+❌ Don’t train your own — sentiment classification is already solved well.
+
+
+Hackathon Tip: Wrap it in a Python FastAPI endpoint, run all survey feedback through it, and show pie chart/bar chart in your dashboard.
+
+
+
+3. Inclusive Rewriting
+✅ Use Wrapper for GPT (few-shot prompting).
+
+
+Example prompt:
+
+
+ “Rewrite this community feedback in clear, respectful, culturally inclusive language without changing meaning.”
+
+
+
+❌ Don’t train your own here — inclusivity rewriting is too nuanced. Instead, you shine by designing the right prompt.
+
+
+Hackathon Tip: Show before/after transformation for a few feedback lines — that’s visually powerful for your pitch.
+
+
+
+4. Bias & Representation Detection
+✅ Program Your Own Lightweight Layer.
+
+
+Example: Tag responses with metadata (e.g., “Language: Spanish” or “Self-identified: Immigrant”). Then calculate if certain groups have systematically more negative sentiment.
+
+
+This can be custom-coded in Python (counting frequencies, comparing sentiment distributions).
+
+
+Hackathon Tip: This is where you show originality: “Look, our app detects underrepresentation and bias gaps automatically.”
+
+
+
+5. Voice Input (Stretch Goal)
+✅ Use Pretrained Model (OpenAI Whisper or HuggingFace whisper-small).
+
+
+❌ Don’t train — audio ASR is way too big for a hackathon.
+
+
+Hackathon Tip: Even if you only demo one Spanish audio memo → English → dashboard, it’ll impress judges.
+
+
+
+🔑 Hackathon MVP Rule of Thumb
+Wrappers / Pretrained Models → Translation, Sentiment Analysis, Voice-to-Text, Inclusive Rewriting.
+
+
+Your Own Programming → Data processing, demographic tagging, bias detection logic, dashboard visualization.
+
+
+That way, you’re judged not just as “people who glued APIs together,” but as builders who added civic logic on top of AI.
+
