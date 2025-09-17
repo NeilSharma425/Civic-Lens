@@ -1,5 +1,5 @@
-import { drizzle } from "drizzle-orm/neon-http";
-import { neon } from "@neondatabase/serverless";
+import { drizzle } from "drizzle-orm/postgres-js";
+import postgres from "postgres";
 import { eq, desc } from "drizzle-orm";
 import { 
   users, 
@@ -14,8 +14,24 @@ import {
 } from "@shared/schema";
 import { IStorage } from "./storage";
 
-const sql = neon(process.env.DATABASE_URL!);
-const db = drizzle(sql);
+// Configure postgres client for Supabase with multiple connection strategies
+const databaseUrl = process.env.DATABASE_URL!;
+
+// Try transaction pooler URL first (port 6543) if it's a standard Supabase URL
+const isSupabaseUrl = databaseUrl.includes('.supabase.co');
+const connectionUrl = isSupabaseUrl 
+  ? databaseUrl.replace(':5432/', ':6543/') // Use transaction pooler port
+  : databaseUrl;
+
+const client = postgres(connectionUrl, {
+  prepare: false, // Required for transaction pooler mode
+  ssl: false, // Temporarily disable SSL for testing
+  max: 1, // Limit connections for serverless environments
+  connect_timeout: 10, // 10 second timeout
+  idle_timeout: 30, // 30 second idle timeout
+  debug: process.env.NODE_ENV === 'development', // Enable debug logging
+});
+const db = drizzle(client);
 
 export class PostgreSQLStorage implements IStorage {
   async getUser(id: string): Promise<User | undefined> {

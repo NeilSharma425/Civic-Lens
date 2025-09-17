@@ -111,6 +111,30 @@ export class MemStorage implements IStorage {
   }
 }
 
-// Temporarily using MemStorage due to TLS certificate issues with Supabase connection
-// TODO: Fix TLS certificate issue for PostgreSQLStorage
-export const storage = new MemStorage();
+// Storage factory with runtime fallback
+async function createStorage(): Promise<IStorage> {
+  // Check if we should use database storage
+  const useDatabase = process.env.DATABASE_URL && process.env.USE_DATABASE !== 'false';
+  
+  if (useDatabase) {
+    try {
+      console.log('Attempting to connect to PostgreSQL database...');
+      const { PostgreSQLStorage } = await import('./pgStorage');
+      const pgStorage = new PostgreSQLStorage();
+      
+      // Test the connection by trying a simple query
+      await pgStorage.getAllFeedbackSubmissions();
+      console.log('✅ PostgreSQL connection successful!');
+      return pgStorage;
+    } catch (error) {
+      console.error('❌ PostgreSQL connection failed:', error);
+      console.log('🔄 Falling back to in-memory storage...');
+    }
+  }
+  
+  console.log('📝 Using in-memory storage');
+  return new MemStorage();
+}
+
+// Initialize storage with fallback
+export const storage = await createStorage();
