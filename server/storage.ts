@@ -1,4 +1,5 @@
 import { type User, type InsertUser, type FeedbackSubmission, type InsertFeedbackSubmission, type AnalysisResult, type InsertAnalysisResult } from "@shared/schema";
+import { PostgreSQLStorage } from "./pgStorage";
 import { randomUUID } from "crypto";
 
 export interface IStorage {
@@ -110,4 +111,6 @@ export class MemStorage implements IStorage {
   }
 }
 
+// Temporarily using MemStorage due to TLS certificate issues with Supabase connection
+// TODO: Fix TLS certificate issue for PostgreSQLStorage
 export const storage = new MemStorage();
