@@ -1,3 +1,6 @@
+// Load environment variables first
+import "./env";
+
 import { type User, type InsertUser, type FeedbackSubmission, type InsertFeedbackSubmission, type AnalysisResult, type InsertAnalysisResult } from "@shared/schema";
 import { PostgreSQLStorage } from "./pgStorage";
 import { randomUUID } from "crypto";
@@ -113,7 +116,27 @@ export class MemStorage implements IStorage {
 
 // Storage factory with runtime fallback
 async function createStorage(): Promise<IStorage> {
-  // Check if we should use database storage
+  // Check if we should use Supabase (preferred method)
+  const supabaseUrl = process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseKey = process.env.SUPABASE_ANON_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  
+  if (supabaseUrl && supabaseKey) {
+    try {
+      console.log('Attempting to connect to Supabase...');
+      const { SupabaseStorage } = await import('./supabaseStorage');
+      const supabaseStorage = new SupabaseStorage();
+      
+      // Test the connection by trying a simple query
+      await supabaseStorage.getAllFeedbackSubmissions();
+      console.log('✅ Supabase connection successful!');
+      return supabaseStorage;
+    } catch (error) {
+      console.error('❌ Supabase connection failed:', error);
+      console.log('🔄 Falling back to in-memory storage...');
+    }
+  }
+  
+  // Fallback to direct PostgreSQL if DATABASE_URL is provided
   const useDatabase = process.env.DATABASE_URL && process.env.USE_DATABASE !== 'false';
   
   if (useDatabase) {

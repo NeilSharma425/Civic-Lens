@@ -25,7 +25,7 @@ const connectionUrl = isSupabaseUrl
 
 const client = postgres(connectionUrl, {
   prepare: false, // Required for transaction pooler mode
-  ssl: false, // Temporarily disable SSL for testing
+  ssl: isSupabaseUrl ? 'require' : false, // SSL required for Supabase
   max: 1, // Limit connections for serverless environments
   connect_timeout: 10, // 10 second timeout
   idle_timeout: 30, // 30 second idle timeout

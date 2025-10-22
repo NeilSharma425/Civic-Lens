@@ -1,15 +1,13 @@
 import { Eye, Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
+import { Link, useLocation } from "wouter";
 
 export default function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [location] = useLocation();
 
-  const scrollToSection = (sectionId: string) => {
-    const element = document.getElementById(sectionId);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
+  const closeMobileMenu = () => {
     setIsMobileMenuOpen(false);
   };
 
@@ -17,7 +15,7 @@ export default function Header() {
     <header className="bg-card border-b border-border shadow-sm">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
-          <div className="flex items-center space-x-3">
+          <Link href="/" className="flex items-center space-x-3 hover:opacity-80 transition-opacity">
             <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
               <Eye className="text-primary-foreground text-lg" />
             </div>
@@ -25,29 +23,22 @@ export default function Header() {
               <h1 className="text-xl font-bold text-foreground" data-testid="app-title">CivicLens</h1>
               <p className="text-xs text-muted-foreground">AI-Powered Civic Feedback Analysis</p>
             </div>
-          </div>
+          </Link>
           <nav className="hidden md:flex space-x-6">
-            <button 
-              onClick={() => scrollToSection('upload')}
-              className="text-muted-foreground hover:text-foreground transition-colors"
-              data-testid="nav-upload"
+            <Link 
+              href="/"
+              className={`text-muted-foreground hover:text-foreground transition-colors ${location === '/' ? 'text-foreground font-semibold' : ''}`}
+              data-testid="nav-home"
             >
-              Upload
-            </button>
-            <button 
-              onClick={() => scrollToSection('dashboard')}
-              className="text-muted-foreground hover:text-foreground transition-colors"
-              data-testid="nav-dashboard"
+              Home
+            </Link>
+            <Link 
+              href="/analytics"
+              className={`text-muted-foreground hover:text-foreground transition-colors ${location === '/analytics' ? 'text-foreground font-semibold' : ''}`}
+              data-testid="nav-analytics"
             >
-              Dashboard
-            </button>
-            <button 
-              onClick={() => scrollToSection('insights')}
-              className="text-muted-foreground hover:text-foreground transition-colors"
-              data-testid="nav-insights"
-            >
-              Insights
-            </button>
+              Analytics
+            </Link>
           </nav>
           <Button
             variant="ghost"
@@ -63,27 +54,22 @@ export default function Header() {
         {isMobileMenuOpen && (
           <div className="md:hidden border-t border-border py-4">
             <nav className="flex flex-col space-y-2">
-              <button 
-                onClick={() => scrollToSection('upload')}
-                className="text-left text-muted-foreground hover:text-foreground transition-colors py-2"
-                data-testid="mobile-nav-upload"
+              <Link 
+                href="/"
+                onClick={closeMobileMenu}
+                className={`text-left text-muted-foreground hover:text-foreground transition-colors py-2 ${location === '/' ? 'text-foreground font-semibold' : ''}`}
+                data-testid="mobile-nav-home"
               >
-                Upload
-              </button>
-              <button 
-                onClick={() => scrollToSection('dashboard')}
-                className="text-left text-muted-foreground hover:text-foreground transition-colors py-2"
-                data-testid="mobile-nav-dashboard"
+                Home
+              </Link>
+              <Link 
+                href="/analytics"
+                onClick={closeMobileMenu}
+                className={`text-left text-muted-foreground hover:text-foreground transition-colors py-2 ${location === '/analytics' ? 'text-foreground font-semibold' : ''}`}
+                data-testid="mobile-nav-analytics"
               >
-                Dashboard
-              </button>
-              <button 
-                onClick={() => scrollToSection('insights')}
-                className="text-left text-muted-foreground hover:text-foreground transition-colors py-2"
-                data-testid="mobile-nav-insights"
-              >
-                Insights
-              </button>
+                Analytics
+              </Link>
             </nav>
           </div>
         )}

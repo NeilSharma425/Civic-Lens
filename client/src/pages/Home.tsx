@@ -1,10 +1,8 @@
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
 import UploadSection from "@/components/UploadSection";
-import Dashboard from "@/components/Dashboard";
-import ProcessingResults from "@/components/ProcessingResults";
-import InsightsExport from "@/components/InsightsExport";
 import Footer from "@/components/Footer";
+import DemoHint from "@/components/DemoHint";
 
 export default function Home() {
   return (
@@ -12,10 +10,8 @@ export default function Home() {
       <Header />
       <Hero />
       <UploadSection />
-      <Dashboard />
-      <ProcessingResults />
-      <InsightsExport />
       <Footer />
+      <DemoHint />
     </div>
   );
 }
