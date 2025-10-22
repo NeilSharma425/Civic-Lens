@@ -53,3 +53,8 @@ vite.config.ts.*
 # OS files
 Thumbs.db
 .DS_Store
+
+# Replit files
+.replit
+.local/
+replit.nix
